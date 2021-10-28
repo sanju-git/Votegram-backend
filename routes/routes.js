@@ -8,7 +8,7 @@ const {
 const router = express.Router();
 
 const { loginUser, registerUser } = require("./../AuthController");
-const { getCandidates, castVote } = require("./../VoterController");
+const { getCandidates, castVote, getPoll } = require("./../VoterController");
 const {
   getAllUsers,
   createPoll,
@@ -29,7 +29,13 @@ router.get("/get-all-polls", isLoggedIn, isAdminOrVoter, getAllPolls);
 // router.get("/get-poll-stats/:pollId", isLoggedIn, isAdminOrVoter, getPollStats);
 
 // voter
-router.get("/get-candidates/:pollId", isLoggedIn, isVoter, getCandidates);
-router.post("/cast-vote", isLoggedIn, isVoter, castVote);
+router.get(
+  "/get-candidates/:pollId",
+  isLoggedIn,
+  isAdminOrVoter,
+  getCandidates
+);
+router.get("/poll/:pollId", isLoggedIn, isAdminOrVoter, getPoll);
+router.post("/cast-vote", isLoggedIn, isAdminOrVoter, castVote);
 
 module.exports = router;

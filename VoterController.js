@@ -26,7 +26,23 @@ exports.getCandidates = async (req, res, next) => {
       candidates: poll.candidates,
     });
   } catch (e) {
-    console.error("getCandidates:", error);
+    console.error("getCandidates:", e);
+    return res.status(500).json({
+      success: false,
+    });
+  }
+};
+
+exports.getPoll = async (req, res, next) => {
+  try {
+    let pollId = req.params.pollId;
+    let poll = await Poll.findOne({ _id: pollId });
+    return res.status(200).json({
+      success: true,
+      poll,
+    });
+  } catch (e) {
+    console.error("catVote:", e);
     return res.status(500).json({
       success: false,
     });
@@ -55,7 +71,7 @@ exports.castVote = async (req, res, next) => {
       message: "vote added",
     });
   } catch (e) {
-    console.error("catVote:", error);
+    console.error("catVote:", e);
     return res.status(500).json({
       success: false,
     });
@@ -63,26 +79,22 @@ exports.castVote = async (req, res, next) => {
 };
 
 async function mailVoter(email, candidateId, pollId) {
-  // let { email } = req.query;
-  // console.log(email);
   let candidate = await User.findOne({ _id: candidateId });
   let poll = await Poll.findOne({ _id: pollId });
 
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      //   user: mailID,
-      // pass: password,
+      user: "gotoosanju@gmail.com",
+      pass: "g0t00sanju",
     },
   });
   let mailOptions = {
-    // from: mailid,
+    from: "gotoosanju@gmail.com",
     to: email,
     subject: "Votegram - Poll Vote information",
     text:
       "Your vote for " +
-      candidate.name +
-      " on the " +
       poll.name +
       " election has been recorded. Soon You'll be notified about the results.",
   };

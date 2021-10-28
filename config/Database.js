@@ -1,3 +1,3 @@
 module.exports = {
-  // url : database url
+  url: "mongodb://localhost:27017/votegram-db",
 };
